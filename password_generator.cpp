@@ -1,46 +1,40 @@
 #include <iostream>
+#include <fstream>
 #include <random>
-// Password length
-#define LENGTH 16
+
+// Length of array
+unsigned int LENGTH = 0;
+// Amount of password
+unsigned int PASSWORD_AMOUNT = 0;
+
+// Password amount & length
+void length(){
+    // Input password amount
+    std::cout << "Password amount: ";
+    std::cin >> PASSWORD_AMOUNT;
+	// Input length
+	std::cout << "Length of password: ";
+	std::cin >> LENGTH;
+	// If length is wrong 
+	while (LENGTH <= 0)
+	{
+		std::cout << "\nPlease enter again";
+		std::cin >> LENGTH;
+		std::cout << '\n'; 
+	}
+}
 
 // Customer`s password
 char* password = new char[LENGTH];
-// Random symbols
-char* all_symbols = new char[4];
-// CapsOFF letter
-char small_letter = '\0';
-// CapsON letter
-char big_letter = '\0';
-// Number
-char number = '\0';
-// Symbols like ' + - )( ! @
-char symbol = '\0';
-
-// Initialize
-void init(){
-    all_symbols[0] = small_letter;
-    all_symbols[1] = big_letter;
-    all_symbols[2] = number;
-    all_symbols[3] = symbol;
-}
-
-// Generate random symbols
-void generate(){
-	all_symbols[0] = rand()%('z'-'a') + 'a';
-    all_symbols[1] = rand()%('Z'-'A') + 'A';
-    all_symbols[2] = rand()%('9' - '0') + '0';
-	all_symbols[3] = rand()%('/' - ' ') + ' ';
-}
 
 // Input random symbols from array(all_symbols) to password
-void input(){
-    init();
+char* generate(){
     for (size_t i = 0; i < LENGTH; i++)
     {
-        generate();
-        int random_index = rand()% 4;
-        password[i] = all_symbols[random_index];
+        // int random_index = rand()% 4;
+        password[i] = rand()%('z'-' ') + ' ';
     }
+    return password;
 }
 
 // Print password
@@ -52,14 +46,28 @@ void print(){
     std::cout << '\n';
 }
 
-int main(){
-    srand(time(NULL));
+// Generate & print password 
+// Write to file
+void amount_password(){
+    length();
+    // Create or open file to write
+    std::ofstream f("YourPasswords.txt");
+        for (size_t i = 0; i < PASSWORD_AMOUNT; i++)
+        {
+            f << '\n' << generate();
+            print();
+        }
+    // Close
+    f.flush();
+    f.close();
+}
 
-    input();
-    print();
+int main(){
+    srand(time(0));
+
+    amount_password();
 
     delete[] password;
-    delete[] all_symbols;
 
 	return 0;
 }
